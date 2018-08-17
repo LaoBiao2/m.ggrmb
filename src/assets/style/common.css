@@ -1,0 +1,68 @@
+@charset "utf-8";
+html {
+    font-size: calc(100vw/7.5);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    line-height: inherit;
+}
+
+b {
+    font-family: '黑体';
+    font-weight: normal;
+}
+
+em {
+    font-style: normal;
+}
+
+i {
+    font-style: normal;
+}
+
+img {
+    border: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%;
+    font-weight: normal;
+}
+
+textarea {
+    resize: none;
+    outline: none;
+}
+
+input {
+    border: none;
+    background: none;
+    outline: none;
+}
+
+ul,
+ol,
+dl,
+dd {
+    list-style-type: none;
+}
+
+a {
+    outline: none;
+    text-decoration: none !important;
+}
+
+a:focus {
+    outline: none;
+}
+
+img {
+    max-width: 100%;
+}
