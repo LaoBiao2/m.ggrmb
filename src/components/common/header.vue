@@ -4,23 +4,26 @@
             <div class="content clearfix">
                 <div class="header-box">
                     <div class="logo"><img src="/static/images/logo.png" alt=""></div>
-                    <a href="javascript:;" class="a-menu"></a>
-                    <div class="menu-content">
+                    <a href="javascript:;" class="a-menu" @click="openMenu()"></a>
+                    <div class="menu menu-content" :class="{active:menuId}">
                         <a href="javascript:;" class="a-register">注册
-                            <i></i>
+                            <i @click="closeMenu()"></i>
                         </a>
                         <ul class="menu-ul">
-                            <li v-for="(val, index) in items" v-bind:class="{active:index==dataId}" v-bind:key="index" @click="test(index)">
-                                <a class="fir-a" :href="val.url">{{val.name}}</a>
-                                <div class="sec-menu">
+                            <li v-for="(val, index) in items" v-bind:key="index" :class="{on: index == selected}">
+                                <a class="fir-a" @click="showMenuS(index)">{{val.name}}
+                                    <i v-if="val.secmenu != ''"></i>
+                                </a>
+                                <div class="sec-menu" v-if="val.secmenu != ''">
                                     <span v-for="(val2, index2) in val.secmenu" v-bind:key="index2">
-                                        <router-link :to="val2.securl">{{val2.secname}}</router-link>
+                                        <router-link :to="val2.securl">{{val2.secname}}
+                                        </router-link>
                                     </span>
                                 </div>
                             </li>
                         </ul>
                     </div>
-                    <div class="menu-bg"></div>
+                    <div class="menu menu-bg" :class="{active:menuId}" @click="closeMenu()" @touchstart="closeMenu()"></div>
                 </div>
             </div>
         </div>
@@ -32,7 +35,8 @@ export default {
     name: "vueHeader",
     data() {
         return {
-            dataId: '0',
+            menuId: false,
+            selected: 0,
             items: [{
                 url: '/',
                 name: '首页',
@@ -43,9 +47,6 @@ export default {
                 secmenu: [{
                     securl: '/about/introduce',
                     secname: '品牌介绍'
-                }, {
-                    securl: '/about',
-                    secname: '合作伙伴'
                 }, {
                     securl: '/about/protocol',
                     secname: '协议声明'
@@ -108,23 +109,21 @@ export default {
     mounted() {
         // window.addEventListener('scroll', this.handleScroll)
     },
-    // methods: {
-    //     handleScroll() {
-    //         var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-    //         // console.log(scrollTop)
-    //         var offsetTop = document.querySelector('.header').offsetTop;
-
-    //         if (scrollTop <= 16) {
-    //             offsetTop = 26 - Number(scrollTop);
-    //             document.querySelector('.header').style.top = offsetTop + 'px';
-    //         } else {
-    //             document.querySelector('.header').style.top = '0px';
-    //         }
-    //     },
-    //     test(i) {
-    //         this.dataId = i;
-    //     }
-    // }
+    methods: {
+        openMenu() {
+            this.menuId = true;
+        },
+        closeMenu() {
+            this.menuId = false;
+        },
+        showMenuS(i) {
+            if (this.selected == i) {
+                this.selected = 0;
+            } else {
+                this.selected = i;
+            }
+        }
+    }
 }
 </script>
 
@@ -162,14 +161,17 @@ export default {
             margin: 0.46rem 0.6rem;
         }
         .menu-content {
-            display: none;
+            // display: none;
             position: fixed;
             top: 0;
             right: 0;
             width: 5.5rem;
             height: 100%;
+            overflow: hidden;
             z-index: 101;
             background-color: #161c40;
+            transform: translateX(100%);
+            transition: all 0.3s;
             a.a-register {
                 height: 1.3rem;
                 display: block;
@@ -191,64 +193,69 @@ export default {
                 }
             }
             ul {
-                height: 1.26rem;
+                height: 90%;
+                overflow: scroll;
                 li {
-                    height: 1.26rem;
                     line-height: 1.26rem;
                     display: block;
-                    position: relative;
                     a.fir-a {
                         color: #fff;
+                        height: 1.26rem;
                         line-height: 1.26rem;
-                        display: block;
                         font-size: 0.3rem;
-                        padding-left: 0.5rem;
+                        padding: 0 0.5rem;
+                        display: flex;
+                        align-content: center;
+                        justify-content: space-between;
+                        i {
+                            width: 0.17rem;
+                            height: 0.32rem;
+                            display: inline-block;
+                            margin-top: 0.4rem;
+                            background: url(/static/images/common_icon.png) -1.97rem -0.01rem
+                                no-repeat;
+                            background-size: 2.83rem 1.14rem;
+                            transition: all 0.3s;
+                        }
                     }
                     .sec-menu {
-                        // display: none;
-                        width: 100px;
+                        width: 100%;
+                        // height: 0;
                         max-height: 0;
                         overflow: hidden;
-                        position: absolute;
-                        top: 1.26rem;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        background-color: #fff;
-                        text-align: center;
+                        background-color: #2a3052;
                         transition: all 0.5s;
-                        span,
-                        span a {
-                            height: 36px;
+                        span {
                             display: block;
-                            font-size: 16px;
-                            line-height: 36px;
-                            margin: 1px;
-                            cursor: pointer;
-                            color: #333;
+                            a {
+                                display: block;
+                                font-size: 0.3rem;
+                                line-height: 1.26rem;
+                                cursor: pointer;
+                                color: #fff;
+                                padding-left: 0.5rem;
+                            }
                         }
                     }
                 }
-                li:hover {
-                    a {
-                        color: #e98024;
+                li.on {
+                    a.fir-a {
+                        i {
+                            transform: rotate(90deg);
+                            -ms-transform: rotate(90deg);
+                            -webkit-transform: rotate(90deg);
+                        }
                     }
                     .sec-menu {
+                        // max-height: max-content;
+                        max-height: 6.3rem;
                         // display: block;
-                        max-height: 200px;
-                        transform: translateX(-50%);
-                        span:hover,
-                        span a:hover {
-                            background-color: #2a3052;
-                            color: #fff;
-                        }
-                    }
-                }
-                li.active {
-                    a {
-                        color: #e98024;
                     }
                 }
             }
+        }
+        .menu-content.active {
+            transform: translateX(0);
         }
         .menu-bg {
             display: none;
@@ -259,6 +266,9 @@ export default {
             left: 0;
             z-index: 100;
             background-color: rgba($color: #000, $alpha: 0.5);
+        }
+        .menu-bg.active {
+            display: block;
         }
     }
 }

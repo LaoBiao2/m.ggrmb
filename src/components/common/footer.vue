@@ -68,6 +68,7 @@ export default {
     position: fixed;
     bottom: 0;
     left: 0;
+    z-index: 100;
     background-color: #2a3052;
     padding: 0.3rem 0 0.34rem;
     box-sizing: border-box;
@@ -83,7 +84,7 @@ export default {
                 line-height: 0.36rem;
                 color: #fff;
                 i {
-                    width: 0.46rem;
+                    width: 0.48rem;
                     height: 0.44rem;
                     display: inline-block;
                     vertical-align: middle;
